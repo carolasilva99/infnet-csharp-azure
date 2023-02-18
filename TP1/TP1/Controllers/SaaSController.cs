@@ -4,21 +4,16 @@ using TP1.Models;
 
 namespace TP1.Controllers
 {
-    public class HomeController : Controller
+    public class SaaSController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<SaaSController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public SaaSController(ILogger<SaaSController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
+        public IActionResult SaaS()
         {
             return View();
         }
