@@ -14,7 +14,7 @@ namespace TP3.Controllers
             var friends = new List<FriendModel>();
 
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -58,7 +58,7 @@ namespace TP3.Controllers
             var friend = default(FriendModel);
 
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -108,7 +108,7 @@ namespace TP3.Controllers
         public ActionResult Create([Bind("FirstName,LastName,BirthDate")] FriendModel friend)
         {
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -154,7 +154,7 @@ namespace TP3.Controllers
             var friend = default(FriendModel);
 
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -198,7 +198,7 @@ namespace TP3.Controllers
         public ActionResult Edit(int id, [Bind("Id,FirstName,LastName,BirthDate")] FriendModel friend)
         {
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -245,7 +245,7 @@ namespace TP3.Controllers
             var friend = default(FriendModel);
 
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -289,7 +289,7 @@ namespace TP3.Controllers
         public ActionResult Delete(int id, IFormCollection collection)
         {
             var connectionString =
-                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=vmc6txd1vcu5hvt*AMW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                $"Server=tcp:tp3-csharp.database.windows.net,1433;Initial Catalog=TP3;Persist Security Info=False;User ID=CloudSA4160fcb2;Password=senha;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             var friend = default(FriendModel);
 
             using (var connection = new SqlConnection(connectionString))
