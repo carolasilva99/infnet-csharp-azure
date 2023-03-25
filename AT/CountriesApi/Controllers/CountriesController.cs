@@ -23,37 +23,42 @@ namespace CountriesApi.Controllers
 
         // GET: api/<CountriesController>
         [HttpGet]
-        public IEnumerable<string> List()
+        public ActionResult<IEnumerable<CountryDto>> List()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_mapper.Map<IEnumerable<CountryDto>>(_countriesService.List()));
         }
 
         // GET api/<CountriesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<CountryDto> Get(int id)
         {
-            return "value";
+            return Ok(_mapper.Map<CountryDto>(_countriesService.GetById(id)));
         }
 
         // POST api/<CountriesController>
         [HttpPost]
-        public ActionResult<Country> Post([FromBody] CreateCountryDto country)
+        public ActionResult<CountryDto> Post([FromBody] CreateCountryDto country)
         {
             var mappedCountry = _mapper.Map<Country>(country);
-            var createdCountry = _countriesService.Create(mappedCountry);
+            var createdCountry = _mapper.Map<CountryDto>(_countriesService.Create(mappedCountry));
             return CreatedAtAction(nameof(Get), new { id = createdCountry.Id}, createdCountry);
         }
 
         // PUT api/<CountriesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<CountryDto> Put(int id, [FromBody] CreateCountryDto country)
         {
+            var mappedCountry = _mapper.Map<Country>(country);
+            mappedCountry.Id = id;
+            return Ok(_mapper.Map<CountryDto>(_countriesService.Update(mappedCountry)));
         }
 
         // DELETE api/<CountriesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            _countriesService.Delete(id);
+            return Ok();
         }
     }
 }

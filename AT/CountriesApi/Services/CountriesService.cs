@@ -3,6 +3,8 @@ using FriendsAPI.Models;
 using Microsoft.Extensions.Options;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics.Metrics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CountriesApi.Services
 {
@@ -25,9 +27,43 @@ namespace CountriesApi.Services
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
             sqlCommand.Parameters.AddWithValue("@Name", country.Name);
-            sqlCommand.Parameters.AddWithValue("@PhotoId", country.PhotoId);
+            sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
 
-            var createdCountry = new Country();
+            var createdCountry = default(Country);
+
+            try
+            {
+                connection.Open();
+
+                using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (reader.Read())
+                {
+                    createdCountry = new Country()
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        Name = reader["Name"].ToString() ?? string.Empty,
+                        PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                    };
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return createdCountry;
+        }
+
+        public IEnumerable<Country> List()
+        {
+            var countries = new List<Country>();
+
+            using var connection = new SqlConnection(_connectionStrings.Database);
+            var procedureName = "GetCountries";
+            var sqlCommand = new SqlCommand(procedureName, connection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
             try
             {
@@ -36,7 +72,44 @@ namespace CountriesApi.Services
                 using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 while (reader.Read())
                 {
-                    createdCountry = new Country
+                    var country = new Country()
+                    {
+                        Id = (int)reader["Id"],
+                        Name = reader["Name"].ToString() ?? string.Empty,
+                        PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                    };
+
+                    countries.Add(country);
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return countries;
+        }
+
+        public Country GetById(int id)
+        {
+            var country = default(Country);
+
+            using var connection = new SqlConnection(_connectionStrings.Database);
+            var procedureName = "GetCountryById";
+            var sqlCommand = new SqlCommand(procedureName, connection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.AddWithValue("@Id", id);
+
+            try
+            {
+                connection.Open();
+
+                using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                while (reader.Read())
+                {
+                    country = new Country()
                     {
                         Id = (int)reader["Id"],
                         Name = reader["Name"].ToString() ?? string.Empty,
@@ -49,7 +122,69 @@ namespace CountriesApi.Services
                 connection.Close();
             }
 
+            return country;
+        }
+
+        public Country Update(Country country)
+        {
+            using var connection = new SqlConnection(_connectionStrings.Database);
+
+            var procedureName = "UpdateCountry";
+            var sqlCommand = new SqlCommand(procedureName, connection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.AddWithValue("@Id", country.Id);
+            sqlCommand.Parameters.AddWithValue("@Name", country.Name);
+            sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
+
+            var createdCountry = default(Country);
+
+            try
+            {
+                connection.Open();
+
+                using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (reader.Read())
+                {
+                    createdCountry = new Country()
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        Name = reader["Name"].ToString() ?? string.Empty,
+                        PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                    };
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+
             return createdCountry;
+        }
+
+        public void Delete(int id)
+        {
+            using var connection = new SqlConnection(_connectionStrings.Database);
+
+            var procedureName = "DeleteCountry";
+            var sqlCommand = new SqlCommand(procedureName, connection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.AddWithValue("@Id", id);
+
+            try
+            {
+                connection.Open();
+
+                using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }

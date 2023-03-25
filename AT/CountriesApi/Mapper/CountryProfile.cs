@@ -9,6 +9,8 @@ namespace CountriesApi.Mapper
         public CountryProfile()
         {
             CreateMap<CreateCountryDto, Country>();
+            CreateMap<Country, CountryDto>();
+            CreateMap<CountryDto, Country>();
         }
     }
 }
