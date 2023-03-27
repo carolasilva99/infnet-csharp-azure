@@ -34,9 +34,11 @@ namespace CountriesApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<StateDto> Post([FromBody] CreateStateDto state)
+        public async Task<ActionResult<StateDto>> Post([FromBody] CreateStateDto state)
         {
+            var photoId = await BlobsService.UploadStateFlag(state.FlagBase64);
             var mappedState = _mapper.Map<State>(state);
+            mappedState.PhotoId = photoId;
             var createdState = _mapper.Map<StateDto>(_statesService.Create(mappedState));
             return CreatedAtAction(nameof(Get), new { id = createdState.Id}, createdState);
         }

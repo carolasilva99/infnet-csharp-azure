@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AT.Domain\AT.Domain.csproj" />
+    <ProjectReference Include="..\AzureBlobs\AzureBlobs.csproj" />
   </ItemGroup>
 
 </Project>
