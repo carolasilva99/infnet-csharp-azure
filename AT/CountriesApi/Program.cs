@@ -16,6 +16,7 @@ builder.Services.Configure<ConnectionStrings>(
     builder.Configuration.GetSection(ConnectionStrings.Name));
 
 builder.Services.AddScoped<ICountriesService, CountriesService>();
+builder.Services.AddScoped<IStatesService, StatesService>();
 
 
 var app = builder.Build();

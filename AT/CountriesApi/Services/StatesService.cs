@@ -8,28 +8,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CountriesApi.Services
 {
-    public class CountriesService : ICountriesService
+    public class StatesService : IStatesService
     {
         private readonly ConnectionStrings _connectionStrings;
 
-        public CountriesService(IOptions<ConnectionStrings> optionsConnectionStrings)
+        public StatesService(IOptions<ConnectionStrings> optionsConnectionStrings)
         {
             _connectionStrings = optionsConnectionStrings.Value;
         }
 
-        public Country Create(Country country)
+        public State Create(State state)
         {
             using var connection = new SqlConnection(_connectionStrings.Database);
 
-            var procedureName = "CreateCountry";
+            var procedureName = "CreateState";
             var sqlCommand = new SqlCommand(procedureName, connection);
 
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.AddWithValue("@Name", country.Name);
+            sqlCommand.Parameters.AddWithValue("@Name", state.Name);
             sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
+            sqlCommand.Parameters.AddWithValue("@CountryId", state.CountryId);
 
-            var createdCountry = default(Country);
+            var createdState = default(State);
 
             try
             {
@@ -39,11 +40,12 @@ namespace CountriesApi.Services
 
                 while (reader.Read())
                 {
-                    createdCountry = new Country()
+                    createdState = new State()
                     {
                         Id = Convert.ToInt32(reader["Id"]),
                         Name = reader["Name"].ToString() ?? string.Empty,
                         PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                        CountryId = Convert.ToInt32(reader["CountryId"])
                     };
                 }
             }
@@ -52,18 +54,20 @@ namespace CountriesApi.Services
                 connection.Close();
             }
 
-            return createdCountry;
+            return createdState;
         }
 
-        public IEnumerable<Country> List()
+        public IEnumerable<State> List(int countryId)
         {
-            var countries = new List<Country>();
+            var states = new List<State>();
 
             using var connection = new SqlConnection(_connectionStrings.Database);
-            var procedureName = "GetCountries";
+            var procedureName = "GetStatesByCountry";
             var sqlCommand = new SqlCommand(procedureName, connection);
 
             sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.AddWithValue("@CountryId", countryId);
 
             try
             {
@@ -72,14 +76,15 @@ namespace CountriesApi.Services
                 using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 while (reader.Read())
                 {
-                    var country = new Country()
+                    var state = new State()
                     {
                         Id = (int)reader["Id"],
                         Name = reader["Name"].ToString() ?? string.Empty,
                         PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                        CountryId = (int)reader["CountryId"],
                     };
 
-                    countries.Add(country);
+                    states.Add(state);
                 }
             }
             finally
@@ -87,15 +92,15 @@ namespace CountriesApi.Services
                 connection.Close();
             }
 
-            return countries;
+            return states;
         }
 
-        public Country GetById(int id)
+        public State GetById(int id)
         {
-            var country = default(Country);
+            var state = default(State);
 
             using var connection = new SqlConnection(_connectionStrings.Database);
-            var procedureName = "GetCountryById";
+            var procedureName = "GetStateById";
             var sqlCommand = new SqlCommand(procedureName, connection);
 
             sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -109,11 +114,12 @@ namespace CountriesApi.Services
                 using var reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 while (reader.Read())
                 {
-                    country = new Country()
+                    state = new State()
                     {
                         Id = (int)reader["Id"],
                         Name = reader["Name"].ToString() ?? string.Empty,
                         PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                        CountryId = (int)reader["CountryId"],
                     };
                 }
             }
@@ -122,24 +128,25 @@ namespace CountriesApi.Services
                 connection.Close();
             }
 
-            return country;
+            return state;
         }
 
-        public Country Update(Country country)
+        public State Update(State state)
         {
             using var connection = new SqlConnection(_connectionStrings.Database);
 
-            var procedureName = "UpdateCountry";
+            var procedureName = "UpdateState";
             var sqlCommand = new SqlCommand(procedureName, connection)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
-            sqlCommand.Parameters.AddWithValue("@Id", country.Id);
-            sqlCommand.Parameters.AddWithValue("@Name", country.Name);
+            sqlCommand.Parameters.AddWithValue("@Id", state.Id);
+            sqlCommand.Parameters.AddWithValue("@Name", state.Name);
             sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
+            sqlCommand.Parameters.AddWithValue("@CountryId", state.CountryId);
 
-            var createdCountry = default(Country);
+            var createdState = default(State);
 
             try
             {
@@ -149,11 +156,12 @@ namespace CountriesApi.Services
 
                 while (reader.Read())
                 {
-                    createdCountry = new Country()
+                    createdState = new State()
                     {
                         Id = Convert.ToInt32(reader["Id"]),
                         Name = reader["Name"].ToString() ?? string.Empty,
                         PhotoId = reader["PhotoId"].ToString() ?? string.Empty,
+                        CountryId = Convert.ToInt32(reader["CountryId"]),
                     };
                 }
             }
@@ -162,14 +170,14 @@ namespace CountriesApi.Services
                 connection.Close();
             }
 
-            return createdCountry;
+            return createdState;
         }
 
         public void Delete(int id)
         {
             using var connection = new SqlConnection(_connectionStrings.Database);
 
-            var procedureName = "DeleteCountry";
+            var procedureName = "DeleteState";
             var sqlCommand = new SqlCommand(procedureName, connection);
 
             sqlCommand.CommandType = CommandType.StoredProcedure;
