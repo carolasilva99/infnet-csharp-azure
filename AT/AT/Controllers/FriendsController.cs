@@ -1,4 +1,8 @@
-﻿using FriendsAPI.Models;
+﻿using AT.Domain;
+using AutoMapper;
+using CountriesApi.Services;
+using FriendsApi.DTOs;
+using FriendsAPI.Models;
 using FriendsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,43 +14,76 @@ namespace FriendsAPI.Controllers
     [ApiController]
     public class FriendsController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IFriendsService _friendsService;
 
-        public FriendsController(IFriendsService friendsService)
+        public FriendsController(IMapper mapper, IFriendsService friendsService)
         {
+            _mapper = mapper;
             _friendsService = friendsService;
         }
 
-        // GET: api/<FriendsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<FriendDto>> List()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_mapper.Map<IEnumerable<FriendDto>>(_friendsService.List()));
         }
 
-        // GET api/<FriendsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<FriendDto> Get(int id)
         {
-            return "value";
+            return Ok(_mapper.Map<FriendDto>(_friendsService.GetById(id)));
+        }
+
+        [HttpGet("/my-friends/{id}")]
+        public ActionResult<IEnumerable<FriendDto>> List(int id)
+        {
+            return Ok(_mapper.Map<IEnumerable<FriendDto>>(_friendsService.GetMyFriends(id)));
         }
 
         [HttpPost]
-        public void Post([FromBody] Friend friend)
+        public async Task<ActionResult<FriendDto>> Post([FromBody] CreateFriendDto state)
         {
-            _friendsService.Create(friend);
+            var photoId = await BlobsService.Upload(state.PhotoBase64, PhotoTypeEnum.STATE_FLAG);
+            var mappedFriend = _mapper.Map<Friend>(state);
+
+            mappedFriend.PhotoId = photoId;
+
+            var createdFriend = _mapper.Map<FriendDto>(_friendsService.Create(mappedFriend));
+            return CreatedAtAction(nameof(Get), new { id = createdFriend.Id }, createdFriend);
         }
 
-        // PUT api/<FriendsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<FriendDto>> Put(int id, [FromBody] CreateFriendDto state)
         {
+            var photoId = await BlobsService.Upload(state.PhotoBase64, PhotoTypeEnum.STATE_FLAG);
+            var mappedFriend = _mapper.Map<Friend>(state);
+
+            mappedFriend.Id = id;
+            mappedFriend.PhotoId = photoId;
+
+            return Ok(_mapper.Map<FriendDto>(_friendsService.Update(mappedFriend)));
         }
 
-        // DELETE api/<FriendsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPut("/my-friends/{id}/{newFriendId}")]
+        public ActionResult AddFriendToFriendsList(int id, int newFriendId)
         {
+            _friendsService.AddToMyFriendsList(id, newFriendId);
+            return Ok();
+        }
+
+        [HttpDelete("/my-friends/{id}/{oldFriendId}")]
+        public ActionResult RemoveFromMyFriendsList(int id, int oldFriendId)
+        {
+            _friendsService.RemoveFromMyFriendsList(id, oldFriendId);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            _friendsService.Delete(id);
+            return Ok();
         }
     }
 }
