@@ -27,7 +27,7 @@ namespace CountriesApi.Services
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
             sqlCommand.Parameters.AddWithValue("@Name", country.Name);
-            sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
+            sqlCommand.Parameters.AddWithValue("@PhotoId", country.PhotoId);
 
             var createdCountry = default(Country);
 
@@ -137,7 +137,7 @@ namespace CountriesApi.Services
 
             sqlCommand.Parameters.AddWithValue("@Id", country.Id);
             sqlCommand.Parameters.AddWithValue("@Name", country.Name);
-            sqlCommand.Parameters.AddWithValue("@PhotoId", string.Empty);
+            sqlCommand.Parameters.AddWithValue("@PhotoId", country.PhotoId);
 
             var createdCountry = default(Country);
 

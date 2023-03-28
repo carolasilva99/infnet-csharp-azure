@@ -37,19 +37,27 @@ namespace CountriesApi.Controllers
 
         // POST api/<CountriesController>
         [HttpPost]
-        public ActionResult<CountryDto> Post([FromBody] CreateCountryDto country)
+        public async Task<ActionResult<CountryDto>> Post([FromBody] CreateCountryDto country)
         {
+            var photoId = await BlobsService.Upload(country.FlagBase64, PhotoTypeEnum.COUNTRY_FLAG);
             var mappedCountry = _mapper.Map<Country>(country);
+
+            mappedCountry.PhotoId = photoId;
+
             var createdCountry = _mapper.Map<CountryDto>(_countriesService.Create(mappedCountry));
             return CreatedAtAction(nameof(Get), new { id = createdCountry.Id}, createdCountry);
         }
 
         // PUT api/<CountriesController>/5
         [HttpPut("{id}")]
-        public ActionResult<CountryDto> Put(int id, [FromBody] CreateCountryDto country)
+        public async Task<ActionResult<CountryDto>> Put(int id, [FromBody] CreateCountryDto country)
         {
+            var photoId = await BlobsService.Upload(country.FlagBase64, PhotoTypeEnum.COUNTRY_FLAG);
             var mappedCountry = _mapper.Map<Country>(country);
+            
             mappedCountry.Id = id;
+            mappedCountry.PhotoId = photoId;
+
             return Ok(_mapper.Map<CountryDto>(_countriesService.Update(mappedCountry)));
         }
 
