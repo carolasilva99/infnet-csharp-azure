@@ -1,6 +1,4 @@
-﻿using FriendsAPI.Models;
-
-namespace FriendsApi.DTOs
+﻿namespace MVC.Models.Friends
 {
     public class CreateFriendDto
     {

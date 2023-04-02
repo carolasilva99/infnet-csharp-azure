@@ -1,4 +1,4 @@
-﻿namespace CountriesApi.DTOs
+﻿namespace MVC.Models.States
 {
     public class CreateStateDto
     {
