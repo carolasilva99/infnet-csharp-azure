@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /TP3/TP3/wwwroot
+/AT/MVC/wwwroot
